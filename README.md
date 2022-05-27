@@ -10,7 +10,8 @@ npm install
 
 ### Setup
 
-Be sure to have a correct default.json configuration file in src folder then run this command to set an environment variable:
+Be sure to have a correct default.json configuration file in src folder and add a "DATABASE_URI" variable to it, specifing the database you want to connect to,  
+then run this command to set an environment variable:
 
 **On Windows powershell:**
 

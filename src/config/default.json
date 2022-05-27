@@ -1,3 +1,4 @@
 {
-  "PORT": 3000
+  "PORT": 3000,
+  "GIVEN_ENDPOINT": "https://dds-test-mock-data.s3-eu-west-1.amazonaws.com/users/list.json"
 }

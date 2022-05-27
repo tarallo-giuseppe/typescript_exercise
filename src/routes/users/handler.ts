@@ -7,8 +7,39 @@ import { addUserDTO, patchUserDTO } from "../../types/validation"
 import { isValidObjectId } from "mongoose"
 import { UserModel } from "../../models"
 import { increaseIdCounter } from "../../utils"
+import { getUserList } from "../../services"
 
-export const RetriveData = async (req: Request, res: Response<Result<User>>) => {}
+// Retrives Data from given endpoint
+export const RetriveData = async (req: Request, res: Response<Result<Array<User>>>) => {
+  const userArray: Array<User> | null = await getUserList()
+
+  let savedUsers: Array<User> = []
+
+  if (!userArray) res.status(500).send({ success: false, message: "A problem occurred with retrieving of user list" })
+  else {
+    for (let el of userArray) {
+      let user: User = el
+
+      // Check if the email is already used by another user
+      const emailOwner = await UserModel.findOne({ email: user.email })
+
+      if (emailOwner) {
+        return res.status(400).send({ success: false, message: "Email already used" })
+      }
+
+      // Create the user
+      const newUser = new UserModel(user)
+      newUser.id = increaseIdCounter()
+      newUser.isActive = false
+
+      // Save the user
+      const savedUser = await newUser.save()
+      savedUsers.push(savedUser)
+    }
+  }
+
+  return res.status(201).send({ success: true, data: savedUsers })
+}
 
 // Gets all users
 export const GetUsers = async (req: Request, res: Response<Result<Array<User>>>) => {
@@ -58,6 +89,7 @@ export const GetUser = async (req: Request, res: Response<Result<User>>) => {
   return res.status(200).send({ success: true, message: "User Found", data: user })
 }
 
+// TODO
 // Patch a user
 export const PatchUser = async (req: Request, res: Response<Result<User>>) => {
   const patch = req.body as patchUserDTO
