@@ -56,11 +56,12 @@ export const GetUsers = async (req: Request, res: Response<Result<Array<User>>>)
 // Adds a user
 export const AddUser = async (req: Request, res: Response<Result<User>>) => {
   const userToAdd = req.body as addUserDTO
+  const { email } = userToAdd
 
   // Check if the email is already used by another user
-  const emailOwner = await UserModel.findOne({ email: userToAdd.email })
+  const foundUser = await UserModel.findOne({ email })
 
-  if (emailOwner) {
+  if (foundUser) {
     return res.status(400).send({ success: false, message: "Email already used" })
   }
 
@@ -89,19 +90,35 @@ export const GetUser = async (req: Request, res: Response<Result<User>>) => {
   return res.status(200).send({ success: true, message: "User Found", data: user })
 }
 
-// TODO
 // Patch a user
 export const PatchUser = async (req: Request, res: Response<Result<User>>) => {
-  const patch = req.body as patchUserDTO
+  const { id } = req.params
+  const userReq = req.body as patchUserDTO
+  const { email } = userReq
+
+  if (email !== undefined) {
+    const foundUser = await UserModel.findOne({ email })
+
+    if (foundUser && !foundUser.id.equals(id)) {
+      return res.status(400).send({ success: false, message: "Email already used" })
+    }
+  }
+
+  const updatedUser = await UserModel.findByIdAndUpdate(id, userReq)
+
+  if (!updatedUser) {
+    return res.status(404).send({ success: false, message: "Cannot find a user with the specified ID" })
+  }
+  return res.status(200).send({ success: true, data: updatedUser })
 }
 
 // Delete a user
 export const DeleteUser = async (req: Request, res: Response<Result<string>>) => {
   const { id } = req.params
 
-  const user = await UserModel.findByIdAndDelete(id)
+  const deletedUser = await UserModel.findByIdAndDelete(id)
 
-  if (!user) {
+  if (!deletedUser) {
     return res.status(404).send({ success: false, message: "Cannot find a user with the specified ID" })
   }
 
