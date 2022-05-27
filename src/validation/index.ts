@@ -1,5 +1,5 @@
 import Ajv, { DefinedError } from "ajv"
-import { addUsersSchema, patchUserSchema } from "./users"
+import { addUserSchema, patchUserSchema, idSchema } from "./users"
 import addFormats from "ajv-formats"
 import { ValidationOption } from "../types/validation"
 
@@ -8,8 +8,9 @@ const ajv = new Ajv({ coerceTypes: true, allErrors: true })
 addFormats(ajv)
 
 // Defining validation function
-export const validateAddUsers = ajv.compile(addUsersSchema)
+export const validateAddUser = ajv.compile(addUserSchema)
 export const validatePatchUser = ajv.compile(patchUserSchema)
+export const validateUserId = ajv.compile(idSchema)
 
 export const buildErrorMessage = (field: ValidationOption, errors: DefinedError[]): string => {
   const [error] = errors

@@ -1,7 +1,7 @@
 import type { JSONSchemaType } from "ajv"
 import { addUserDTO } from "../../types/validation"
 
-export const addUsersSchema: JSONSchemaType<addUserDTO> = {
+export const addUserSchema: JSONSchemaType<addUserDTO> = {
   type: "object",
   properties: {
     firstName: {

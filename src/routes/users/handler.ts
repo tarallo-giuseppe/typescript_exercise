@@ -8,6 +8,7 @@ import { isValidObjectId } from "mongoose"
 import { UserModel } from "../../models"
 import { increaseIdCounter } from "../../utils"
 import { getUserList } from "../../services"
+import { logger } from "../../winston"
 
 // Retrives Data from given endpoint
 export const RetriveData = async (req: Request, res: Response<Result<Array<User>>>) => {
@@ -46,8 +47,12 @@ export const GetUsers = async (req: Request, res: Response<Result<Array<User>>>)
   let Users: Array<User> = []
 
   await UserModel.find((err: any, foundUsers: Array<User>) => {
-    if (err) return res.status(500).send({ success: false, message: "Error during Users research" })
-    else Users = foundUsers
+    if (err) {
+      logger.info(err.message)
+      return res.status(500).send({ success: false, message: "Error during Users research" })
+    } else {
+      Users = foundUsers
+    }
   })
 
   return res.status(200).send({ success: true, message: "Users Found", data: Users })
