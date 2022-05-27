@@ -1,4 +1,3 @@
 {
-  "PORT": 3000,
-  "DATABASE_URI": "mongodb+srv://user:yOaSMwiS5XWh9ODf@cluster0.e21c9ge.mongodb.net/test?authSource=admin&replicaSet=atlas-70cfea-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true"
+  "PORT": 3000
 }
