@@ -93,8 +93,8 @@ export const GetUser = async (req: Request, res: Response<Result<User>>) => {
 // Patch a user
 export const PatchUser = async (req: Request, res: Response<Result<User>>) => {
   const { id } = req.params
-  const userReq = req.body as patchUserDTO
-  const { email } = userReq
+  const patchReq = req.body as patchUserDTO
+  const { email } = patchReq
 
   if (email !== undefined) {
     const foundUser = await UserModel.findOne({ email })
@@ -104,7 +104,7 @@ export const PatchUser = async (req: Request, res: Response<Result<User>>) => {
     }
   }
 
-  const updatedUser = await UserModel.findByIdAndUpdate(id, userReq)
+  const updatedUser = await UserModel.findByIdAndUpdate(id, patchReq)
 
   if (!updatedUser) {
     return res.status(404).send({ success: false, message: "Cannot find a user with the specified ID" })
