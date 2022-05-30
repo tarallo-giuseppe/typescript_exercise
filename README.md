@@ -41,5 +41,3 @@ or just:
 ```sh
 npm run dev
 ```
-
-## 🤝 Contributing
