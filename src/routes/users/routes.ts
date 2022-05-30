@@ -13,7 +13,7 @@ UsersRoutes.get("/retrive-data", RetriveData)
 UsersRoutes.get("/", GetUsers)
 UsersRoutes.post("/", validateBody(validateAddUser), AddUser)
 UsersRoutes.get("/:id", validateParams(validateUserId), GetUser)
-UsersRoutes.patch(":id", validateParams(validateUserId), validateBody(validatePatchUser), PatchUser)
-UsersRoutes.delete(":id", validateParams(validateUserId), DeleteUser)
+UsersRoutes.patch("/:id", validateParams(validateUserId), validateBody(validatePatchUser), PatchUser)
+UsersRoutes.delete("/:id", validateParams(validateUserId), DeleteUser)
 
 export default UsersRoutes

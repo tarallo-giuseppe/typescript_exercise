@@ -74,6 +74,7 @@ export const AddUser = async (req: Request, res: Response<Result<User>>) => {
   const user = new UserModel(userToAdd)
   user.id = increaseIdCounter()
   user.isActive = false
+  user.desctiption = ""
 
   // Save the user
   const savedUser = await user.save()
@@ -104,16 +105,14 @@ export const PatchUser = async (req: Request, res: Response<Result<User>>) => {
   if (email !== undefined) {
     const foundUser = await UserModel.findOne({ email })
 
-    if (foundUser && !foundUser.id.equals(id)) {
+    if (foundUser && !foundUser.id.equals(id))
       return res.status(400).send({ success: false, message: "Email already used" })
-    }
   }
 
   const updatedUser = await UserModel.findByIdAndUpdate(id, patchReq)
 
-  if (!updatedUser) {
-    return res.status(404).send({ success: false, message: "Cannot find a user with the specified ID" })
-  }
+  if (!updatedUser) return res.status(404).send({ success: false, message: "User Not Found" })
+
   return res.status(200).send({ success: true, data: updatedUser })
 }
 
@@ -124,7 +123,7 @@ export const DeleteUser = async (req: Request, res: Response<Result<string>>) =>
   const deletedUser = await UserModel.findByIdAndDelete(id)
 
   if (!deletedUser) {
-    return res.status(404).send({ success: false, message: "Cannot find a user with the specified ID" })
+    return res.status(404).send({ success: false, message: "User Not Found" })
   }
 
   res.status(200).send({ success: true, data: "User deleted" })

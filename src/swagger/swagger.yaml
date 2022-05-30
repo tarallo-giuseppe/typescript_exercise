@@ -1,0 +1,296 @@
+swagger: "2.0"
+info:
+  description: "This is a swagger interface for assigned typescript exercise."
+  version: "1.0.0"
+  title: "typescript exercise"
+host: "localhost:3000"
+basePath: "/users"
+tags:
+  - name: "Retrieve Data"
+    description: "Retrieves data from given endpoint"
+  - name: "CRUD Users"
+    description: "CRUD operations for users from database"
+schemes:
+  - "http"
+
+paths:
+  /retrive-data:
+    get:
+      tags:
+        - "Retrieve Data"
+      description: "Retrieves datas"
+      operationId: "retrieve"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "500":
+          description: "A problem occurred with retrieving of user list"
+          schema:
+            $ref: "#/definitions/FailureResponse"
+        "400":
+          description: "Email already used"
+          schema:
+            $ref: "#/definitions/FailureResponse"
+        "201":
+          description: "Users saved"
+          schema:
+            $ref: "#/definitions/RetrieveSuccessResponse"
+  /:
+    get:
+      tags:
+        - "CRUD Users"
+      description: "Gets all users from database"
+      operationId: "getAll"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "500":
+          description: "Error during Users research"
+          schema:
+            $ref: "#/definitions/FailureResponse"
+        "200":
+          description: "Users Found"
+          schema:
+            $ref: "#/definitions/GetAllSuccessResponse"
+    post:
+      tags:
+        - "CRUD Users"
+      description: "Adds a user to database"
+      operationId: "AddUser"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Basic datas to add a user to database"
+          required: true
+          schema:
+            $ref: "#/definitions/addUserDTO"
+      responses:
+        "400":
+          description: "Email already used"
+          schema:
+            $ref: "#/definitions/FailureResponse"
+        "200":
+          description: "User saved"
+          schema:
+            $ref: "#/definitions/AddOrPatchUserSuccessResponse"
+  /{id}:
+    get:
+      tags:
+        - "CRUD Users"
+      description: "Gets a single user from database"
+      operationId: "GetUser"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "User Id"
+          required: true
+          type: "number"
+      responses:
+        "400":
+          description: "Invalid User ID"
+          schema:
+            $ref: "#/definitions/FailureResponse"
+        "404":
+          description: "User Not Found"
+          schema:
+            $ref: "#/definitions/FailureResponse"
+        "200":
+          description: "User Found"
+          schema:
+            $ref: "#/definitions/GetUserSuccessResponse"
+    patch:
+      tags:
+        - "CRUD Users"
+      description: "Changes some fields of a user from database"
+      operationId: "PatchUser"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "User Id"
+          required: true
+          type: "number"
+        - in: "body"
+          name: "body"
+          description: "Possible datas to patch a user from database"
+          required: true
+          schema:
+            $ref: "#/definitions/patchUserDTO"
+      responses:
+        "400":
+          description: "Email already used"
+          schema:
+            $ref: "#/definitions/FailureResponse"
+        "404":
+          description: "User Not Found"
+          schema:
+            $ref: "#/definitions/FailureResponse"
+        "200":
+          description: "User Found"
+          schema:
+            $ref: "#/definitions/AddOrPatchUserSuccessResponse"
+    delete:
+      tags:
+        - "CRUD Users"
+      description: "Removes a user from database"
+      operationId: "DeleteUser"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "User Id"
+          required: true
+          type: "number"
+      responses:
+        "404":
+          description: "User Not Found"
+          schema:
+            $ref: "#/definitions/FailureResponse"
+        "200":
+          description: "User Found"
+          schema:
+            $ref: "#/definitions/DeleteUserSuccessResponse"
+
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "number"
+      firstname:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+      gender:
+        type: "string"
+      birthday:
+        type: "string"
+      isActive:
+        type: "boolean"
+      desctiption:
+        type: "string"
+      lastAccess:
+        type: "object"
+        properties:
+          mac:
+            type: "string"
+          ip:
+            type: "string"
+          userAgent:
+            type: "string"
+
+  UserArray:
+    type: "array"
+    items:
+      $ref: "#/definitions/User"
+
+  addUserDTO:
+    type: "object"
+    properties:
+      firstname:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+      gender:
+        type: "string"
+      birthday:
+        type: "string"
+
+  patchUserDTO:
+    type: "object"
+    properties:
+      firstname:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+      gender:
+        type: "string"
+      birthday:
+        type: "string"
+      desctiption:
+        type: "string"
+
+  RetrieveSuccessResponse:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
+        default: "true"
+      data:
+        $ref: "#/definitions/UserArray"
+
+  GetAllSuccessResponse:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
+        default: "true"
+      message:
+        type: "string"
+        default: "Users Found"
+      data:
+        $ref: "#/definitions/UserArray"
+
+  AddOrPatchUserSuccessResponse:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
+        default: "true"
+      data:
+        $ref: "#/definitions/User"
+
+  GetUserSuccessResponse:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
+        default: "true"
+      message:
+        type: "string"
+        default: "User Found"
+      data:
+        $ref: "#/definitions/User"
+
+  DeleteUserSuccessResponse:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
+        default: "true"
+      data:
+        type: "string"
+        default: "User deleted"
+
+  FailureResponse:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
+        default: "false"
+      message:
+        type: "string"
