@@ -3,7 +3,7 @@ import config from "config"
 import { startServer } from "./server"
 import { connectToDatabase } from "./db"
 
-const port = config.get("SERVICE_PORT")
+const port = config.get("PORT")
 
 connectToDatabase()
 

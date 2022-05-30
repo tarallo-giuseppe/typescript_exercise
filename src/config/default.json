@@ -1,4 +1,5 @@
 {
   "PORT": 3000,
-  "GIVEN_ENDPOINT": "https://dds-test-mock-data.s3-eu-west-1.amazonaws.com/users/list.json"
+  "GIVEN_ENDPOINT": "https://dds-test-mock-data.s3-eu-west-1.amazonaws.com/users/list.json",
+  "DATABASE_URI": "DATABASE_URI"
 }

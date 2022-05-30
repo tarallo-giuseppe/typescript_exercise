@@ -41,3 +41,21 @@ or just:
 ```sh
 npm run dev
 ```
+
+## Swagger Interface
+
+### Setup
+
+Run the project.
+
+### Open Interface
+
+**On browser:**
+
+Go to http://localhost:3000/api-docs
+
+## Author
+
+👤 **Gate42**
+
+- Github: [tarallo-giuseppe](https://github.com/tarallo-giuseppe)

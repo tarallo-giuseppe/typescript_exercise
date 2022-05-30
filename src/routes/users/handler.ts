@@ -4,11 +4,9 @@ import { User } from "../../types"
 import { Result } from "../../types/routes"
 import { addUserDTO, patchUserDTO } from "../../types/validation"
 
-import { isValidObjectId } from "mongoose"
 import { UserModel } from "../../models"
 import { increaseIdCounter } from "../../utils"
 import { getUserList } from "../../services"
-import { logger } from "../../winston"
 
 // Retrives Data from given endpoint
 export const RetriveData = async (req: Request, res: Response<Result<Array<User>>>) => {
@@ -30,7 +28,6 @@ export const RetriveData = async (req: Request, res: Response<Result<Array<User>
 
       // Create the user
       const newUser = new UserModel(user)
-      newUser.id = increaseIdCounter()
       newUser.isActive = false
 
       // Save the user
@@ -46,14 +43,7 @@ export const RetriveData = async (req: Request, res: Response<Result<Array<User>
 export const GetUsers = async (req: Request, res: Response<Result<Array<User>>>) => {
   let Users: Array<User> = []
 
-  await UserModel.find((err: any, foundUsers: Array<User>) => {
-    if (err) {
-      logger.info(err.message)
-      return res.status(500).send({ success: false, message: "Error during Users research" })
-    } else {
-      Users = foundUsers
-    }
-  })
+  Users = (await UserModel.find()) as Array<User>
 
   return res.status(200).send({ success: true, message: "Users Found", data: Users })
 }
@@ -85,11 +75,8 @@ export const AddUser = async (req: Request, res: Response<Result<User>>) => {
 export const GetUser = async (req: Request, res: Response<Result<User>>) => {
   const { id } = req.params
 
-  // Check if is valid ObjectId
-  if (!isValidObjectId(id)) return res.status(400).send({ success: false, message: "Invalid User ID" })
-
   // Checks if the User exists in the DB and retrieve it eventually
-  const user: User | null = await UserModel.findById(id)
+  const user: User | null = (await UserModel.findOne({ id })) as User
   if (!user) return res.status(404).send({ success: false, message: "User Not Found" })
 
   // Success response: returns requested User
@@ -109,7 +96,7 @@ export const PatchUser = async (req: Request, res: Response<Result<User>>) => {
       return res.status(400).send({ success: false, message: "Email already used" })
   }
 
-  const updatedUser = await UserModel.findByIdAndUpdate(id, patchReq)
+  const updatedUser = await UserModel.findOneAndUpdate({ id }, patchReq)
 
   if (!updatedUser) return res.status(404).send({ success: false, message: "User Not Found" })
 
@@ -120,7 +107,7 @@ export const PatchUser = async (req: Request, res: Response<Result<User>>) => {
 export const DeleteUser = async (req: Request, res: Response<Result<string>>) => {
   const { id } = req.params
 
-  const deletedUser = await UserModel.findByIdAndDelete(id)
+  const deletedUser = await UserModel.findOneAndDelete({ id })
 
   if (!deletedUser) {
     return res.status(404).send({ success: false, message: "User Not Found" })
