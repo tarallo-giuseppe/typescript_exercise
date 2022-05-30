@@ -56,6 +56,6 @@ Go to http://localhost:3000/api-docs
 
 ## Author
 
-👤 **Tarallo Giuseppe**
+👤 **Giuseppe Tarallo**
 
 - Github: [tarallo-giuseppe](https://github.com/tarallo-giuseppe)

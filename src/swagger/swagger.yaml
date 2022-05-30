@@ -48,10 +48,6 @@ paths:
       produces:
         - "application/json"
       responses:
-        "500":
-          description: "Error during Users research"
-          schema:
-            $ref: "#/definitions/FailureResponse"
         "200":
           description: "Users Found"
           schema:
